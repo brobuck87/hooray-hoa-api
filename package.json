@@ -10,9 +10,11 @@
       "build": "tsc",
       "start": "ts-node src/index.ts",
       "typeorm": "typeorm-ts-node-commonjs",
-      "migration": "npm run typeorm migration:run -- -d ./src/data-source.ts"
+      "migration": "npm run typeorm migration:run -- -d ./src/data-source.ts",
+      "lint": "eslint ."
    },
    "devDependencies": {
+      "@eslint/js": "^9.7.0",
       "@types/bcrypt": "^5.0.1",
       "@types/cors": "^2.8.17",
       "@types/express": "^4.17.20",
@@ -20,8 +22,11 @@
       "@types/memory-cache": "^0.2.4",
       "@types/node": "^16.11.10",
       "concurrently": "^8.2.2",
+      "eslint": "^9.7.0",
+      "globals": "^15.8.0",
       "ts-node": "10.7.0",
-      "typescript": "^5.5.4"
+      "typescript": "^5.5.4",
+      "typescript-eslint": "^7.17.0"
    },
    "dependencies": {
       "bcrypt": "^5.1.1",
