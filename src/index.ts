@@ -1,15 +1,28 @@
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
+import * as express from "express";
+import * as dotenv from "dotenv";
+import "reflect-metadata";
+import { Request, Response } from "express";
+import { AppDataSource } from "./data-source";
+import { apiRouter } from './routes'
+import { errorHandler } from "./middleware/errorHandler";
 
 dotenv.config();
+const app = express();
+const { PORT = 3000 } = process.env;
 
-const app: Express = express();
-const port = process.env.PORT || 3000;
+app.use(express.json());
+app.use(errorHandler);
+app.use("/api", apiRouter);
 
-app.get("/", (req: Request, res: Response) => {
-    res.send("Express + TypeScript Server");
+app.get("*", (req: Request, res: Response) => {
+    res.status(200).json({ message: "Hello from Hooray HOA" });
 });
 
-app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+AppDataSource.initialize()
+    .then(async () => {
+        app.listen(PORT, () => {
+            console.log("Server is running on http://localhost:" + PORT);
+        });
+        console.log("Data Source has been initialized!");
+    })
+    .catch((error) => console.log(error));

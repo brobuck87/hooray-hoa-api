@@ -21,7 +21,7 @@ Empowering HOAs with innovative, user-friendly technology to enhance community m
 Before you begin, ensure you have met the following requirements:
 
 - [Node.js](https://nodejs.org/en/download/package-manager)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/) installed
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 - [PostgreSQL](https://www.postgresql.org/download/) installed and running
 - Environment variables set up (see `.env.example`)
 
@@ -46,37 +46,16 @@ To get a local copy up and running, follow these simple steps:
    - Rename `.env.example` to `.env`
    - Update `.env` with your environment-specific variables
 
-4. Start the server:
+4. Run the migrations to build your database tables (needed only when the tables change)
 
    ```bash
-   npm run dev
+   npm run migration
+   ```
+
+5. Start the server:
+
+   ```bash
+   npm run start:dev
    ```
 
 5. The server should now be running at `http://localhost:3000`.
-
-## API Documentation
-
-For detailed API documentation, refer to [API Documentation](docs/api.md).
-
-## Testing
-
-To run tests, use the following command:
-
-```bash
-npm test
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system.
-
-## Contributing
-
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
-
-## License
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-## Acknowledgments
-
