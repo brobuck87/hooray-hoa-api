@@ -33,6 +33,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
 
-      - run: npm run lint
       - run: npm install
+      - run: npm run lint
       - run: npm run build
