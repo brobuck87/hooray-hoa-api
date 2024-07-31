@@ -1,5 +1,8 @@
 # Hooray HOA API
 
+![Build](https://github.com/brobuck87/hooray-hoa-api/actions/workflows/build.yml/badge.svg)
+![Deploy](https://github.com/brobuck87/hooray-hoa-api/actions/workflows/deploy.yml/badge.svg)
+
 ## Overview
 
 Empowering HOAs with innovative, user-friendly technology to enhance community management, transparency, and engagement.
