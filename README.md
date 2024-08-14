@@ -1,7 +1,6 @@
 # Hooray HOA API
 
 ![Build](https://github.com/brobuck87/hooray-hoa-api/actions/workflows/build.yml/badge.svg)
-![Deploy](https://github.com/brobuck87/hooray-hoa-api/actions/workflows/deploy.yml/badge.svg)
 
 ## Overview
 
@@ -49,13 +48,7 @@ To get a local copy up and running, follow these simple steps:
    - Rename `.env.example` to `.env`
    - Update `.env` with your environment-specific variables
 
-4. Run the migrations to build your database tables (needed only when the tables change)
-
-   ```bash
-   npm run migration
-   ```
-
-5. Start the server:
+4. Start the server:
 
    ```bash
    npm run start:dev
