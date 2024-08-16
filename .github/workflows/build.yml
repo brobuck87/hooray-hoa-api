@@ -32,12 +32,12 @@ jobs:
       - run: npm install
       - run: npm run lint
       - run: npm run test:cov
-        - name: Upload coverage to Codecov
-          uses: codecov/codecov-action@v3
-          with:
-            token: ${{ secrets.CODECOV_TOKEN }}
-            files: ./coverage/lcov.info
-            flags: unittests
-            name: codecov-umbrella      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella      
       - run: npm run test:e2e
       - run: npm run build
