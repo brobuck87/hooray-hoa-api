@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import * as dotenv from 'dotenv';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
-import * as dotenv from 'dotenv';
+import { AddressesModule } from './addresses/addresses.module';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE } = process.env;
   imports: [
     AuthModule,
     UsersModule,
+    AddressesModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: DB_HOST,
@@ -23,8 +25,9 @@ const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE } = process.env;
       database: DB_DATABASE,
       entities: [User],
       synchronize: true,
+      autoLoadEntities: true,
     }),
   ],
   controllers: [AppController],
 })
-export class AppModule { }
+export class AppModule {}

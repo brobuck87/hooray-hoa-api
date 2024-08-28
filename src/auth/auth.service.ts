@@ -7,12 +7,15 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/users/user.entity';
+import { RegisterDto } from './dto/register.dto';
+import { AddressesService } from '../addresses/addresses.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private addressService: AddressesService,
   ) {}
 
   private async encryptpass(password: string) {
@@ -23,9 +26,20 @@ export class AuthService {
   }
 
   async register(
-    email: string,
-    password: string,
+    userRegistration: RegisterDto,
   ): Promise<{ user: User; token: string }> {
+    const {
+      email,
+      password,
+      address1,
+      address2,
+      address3,
+      city,
+      state,
+      postalCode,
+      country,
+    } = userRegistration;
+
     // Check if the email already exists
     const existingUser = await this.usersService.findOneByEmail(email);
     if (existingUser) {
@@ -35,8 +49,23 @@ export class AuthService {
     // Hash the password before saving it
     const encryptedPassword = await this.encryptpass(password);
 
-    // Create a new user entity
-    const user = await this.usersService.create(email, encryptedPassword);
+    // create the address
+    const address = await this.addressService.create(
+      address1,
+      address2,
+      address3,
+      city,
+      state,
+      postalCode,
+      country,
+    );
+
+    // create a new user entity
+    const user = await this.usersService.create(
+      email,
+      encryptedPassword,
+      address,
+    );
 
     // Save the new user to the database
     const payload = { sub: user.id, email: user.email };

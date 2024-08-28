@@ -2,13 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import { Address } from '../addresses/address.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
+  ) { }
 
   findAll(): Promise<User[]> {
     return this.usersRepository.find();
@@ -25,12 +26,18 @@ export class UsersService {
     return this.usersRepository.findOneBy({ email });
   }
 
-  create(email: string, password: string): Promise<User> {
-    return this.usersRepository.save({
+  async create(
+    email: string,
+    password: string,
+    address: Address,
+  ): Promise<User> {
+    const user = this.usersRepository.create({
       email,
       password,
-      createdAt: new Date(),
     });
+    user.address = address;
+    await this.usersRepository.save(user);
+    return user;
   }
 
   async remove(id: number): Promise<void> {

@@ -1,12 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
 import { ExecutionContext } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { AuthController } from './auth.controller';
+import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
 import { User } from '../users/user.entity';
+import { UsersService } from '../users/users.service';
+import { AddressesService } from '../addresses/addresses.service';
+import { Address } from '../addresses/address.entity';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -18,6 +20,7 @@ describe('AuthController', () => {
       providers: [
         AuthService,
         UsersService,
+        AddressesService,
         {
           provide: getRepositoryToken(User),
           useValue: {
@@ -41,6 +44,12 @@ describe('AuthController', () => {
                 request.user = { id: 1, email: 'test@example.com' }; // Mock the user object
                 return true;
               }),
+          },
+        },
+        {
+          provide: getRepositoryToken(Address),
+          useValue: {
+            save: jest.fn(),
           },
         },
       ],

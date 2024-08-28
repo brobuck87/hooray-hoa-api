@@ -1,22 +1,26 @@
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { JwtService } from '@nestjs/jwt';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
-import { JwtService } from '@nestjs/jwt';
-import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { User } from '../users/user.entity';
-import * as bcrypt from 'bcrypt';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { AddressesService } from '../addresses/addresses.service';
+import { Address } from '../addresses/address.entity';
 
 describe('AuthService', () => {
   let authService: AuthService;
   let usersService: UsersService;
   let jwtService: JwtService;
+  let addressesService: AddressesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
         UsersService,
+        AddressesService,
         {
           provide: getRepositoryToken(User),
           useValue: {
@@ -30,12 +34,19 @@ describe('AuthService', () => {
             signAsync: jest.fn(),
           },
         },
+        {
+          provide: getRepositoryToken(Address),
+          useValue: {
+            save: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
     usersService = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
+    addressesService = module.get<AddressesService>(AddressesService);
   });
 
   describe('register', () => {
@@ -43,26 +54,52 @@ describe('AuthService', () => {
       const email = 'test@example.com';
       const password = 'password123';
       const encryptedPassword = 'encryptedPassword123';
+      const address1 = '123 Main St';
+      const city = 'Orlando';
+      const state = 'FL';
+      const postalCode = '34786';
+      const country = 'US';
 
       const user = new User();
       user.id = 1;
       user.email = email;
       user.password = encryptedPassword;
 
+      const address = new Address();
+      address.address1 = address1;
+      address.city = city;
+      address.state = state;
+      address.postalCode = postalCode;
+      address.country = country;
+
       jest.spyOn(usersService, 'findOneByEmail').mockResolvedValue(null);
       jest
         .spyOn(bcrypt, 'hash')
         .mockImplementation(() => Promise.resolve(encryptedPassword));
       jest.spyOn(usersService, 'create').mockResolvedValue(user);
+      jest.spyOn(addressesService, 'create').mockResolvedValue(address);
       jest.spyOn(jwtService, 'signAsync').mockResolvedValue('token123');
 
-      const result = await authService.register(email, password);
+      const registerBody = {
+        email,
+        password,
+        address1,
+        address2: undefined,
+        address3: undefined,
+        city,
+        state,
+        postalCode,
+        country,
+      };
+
+      const result = await authService.register(registerBody);
 
       expect(usersService.findOneByEmail).toHaveBeenCalledWith(email);
       expect(bcrypt.hash).toHaveBeenCalledWith(password, 12);
       expect(usersService.create).toHaveBeenCalledWith(
         email,
         encryptedPassword,
+        { address1, city, country, postalCode, state },
       );
       expect(jwtService.signAsync).toHaveBeenCalledWith({
         sub: user.id,
@@ -84,7 +121,19 @@ describe('AuthService', () => {
         .spyOn(usersService, 'findOneByEmail')
         .mockResolvedValue(existingUser);
 
-      await expect(authService.register(email, password)).rejects.toThrow(
+      const registerBody = {
+        email,
+        password,
+        address1: '123 Main St',
+        address2: undefined,
+        address3: undefined,
+        city: 'Orlando',
+        state: 'FL',
+        postalCode: '34786',
+        country: 'US',
+      };
+
+      await expect(authService.register(registerBody)).rejects.toThrow(
         ConflictException,
       );
       expect(usersService.findOneByEmail).toHaveBeenCalledWith(email);

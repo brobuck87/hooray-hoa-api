@@ -8,7 +8,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Hooray HOA API')
-    .setDescription('Empowering HOAs with innovative, user-friendly technology to enhance community management, transparency, and engagement.')
+    .setDescription(
+      'Empowering HOAs with innovative, user-friendly technology to enhance community management, transparency, and engagement.',
+    )
     .setVersion('1.0')
     .addTag('auth')
     .build();
