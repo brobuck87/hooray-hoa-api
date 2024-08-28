@@ -1,6 +1,7 @@
 # Hooray HOA API
 
 ![Build](https://github.com/brobuck87/hooray-hoa-api/actions/workflows/build.yml/badge.svg)
+[![codecov](https://codecov.io/github/brobuck87/hooray-hoa-api/graph/badge.svg?token=0HVSE9N0JV)](https://codecov.io/github/brobuck87/hooray-hoa-api)
 
 ## Overview
 
